@@ -1,0 +1,271 @@
+\documentclass[a4paper, 11pt]{article}
+
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{a4wide}
+\usepackage[utf8]{inputenc}
+\usepackage[main = russian, english]{babel}
+\usepackage[pdftex]{graphicx}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{indentfirst}
+
+%% TIKZ
+\usepackage{tikz}                % Векторная графика
+                                 %
+\usepackage{pgfplots}            % % Нужно для вставки графиков из 
+\pgfplotsset{compat=newest}      % % matlab2tikz
+\usetikzlibrary{plotmarks}       % %
+\usetikzlibrary{arrows.meta}     % %
+\usepgfplotslibrary{patchplots}  % %
+\usepackage{grffile}             % %
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\N}{\mathbb{N}}
+
+\begin{document}
+	\section{Постановка задачи}
+	Рассматривается двумерная динамическая система
+	\begin{equation}\label{eq:basic-task}
+		\left\{\begin{aligned}
+			\dot u &= \frac{au(K - u)}{K} - \frac{buv}{1+Au} + d_1 u_{xx} \\
+			\dot v &= -cv + \frac{duv}{1 + Au} +d_2 v_{xx},
+		\end{aligned}\right.
+	\end{equation}
+	где $a$, $b$, $c$, $d$, $A$, $K$, $d_1$, $d_2$~--- положительные параметры, $(u,\,v) \in \R^2_{+}$.
+	Здесь $u(x,t)$ ($v(x,t))$~--- плотность популяции жертв (хищников) в точке с координатой $x$ в момент времени $t$, $t > 0$, $x \in \R$, $d_1,\,d_2$~--- величины коэффициентов диффузии жертв и хищников соответственно.
+
+	В рамках задачи, для системы \eqref{eq:basic-task} требуется:
+	\begin{enumerate}
+		\item Уменьшить число параметров, сделав замену переменных;
+		\item Исследовать фазовый портрет нераспределённой системы;
+		\item Проверить наличие решений распределённой системы;
+		\item Выбрать подходящее решение и скорость волны;
+		\item Привести иллюстрации и графики фазовых портретов и решений.
+	\end{enumerate}
+
+
+	\section{Уменьшение числа параметров}
+	Для уменьшения числа параметров проведём линейную замену переменных, которая не изменит свойств исходной системы. Итак, пусть
+	$$
+		\tilde u = \alpha u, \;
+		\tilde v = \beta v,  \;
+		\tilde t = \gamma t, \;
+		\tilde x = \delta x.
+	$$
+	Тогда частные производные исходных переменных $u$ и $v$ примут вид:
+	$$
+		u_t = \frac{\partial}{\partial t} \left(\frac{\tilde u}{\alpha}\right) =
+		\frac{\gamma}{\alpha}\tilde u_{\tilde t},
+		\quad
+		u_x = \frac{\partial}{\partial x} \left(\frac{\tilde u}{\alpha}\right) =
+		\frac{\delta}{\alpha}\tilde u_{\tilde x},
+		\quad
+		u_{xx} = \frac{\delta^2}{\alpha}\tilde u_{\tilde x \tilde x},
+	$$
+	$$
+		v_t = \frac{\partial}{\partial t} \left(\frac{\tilde v}{\beta}\right) =
+		\frac{\gamma}{\beta}\tilde v_{\tilde t},
+		\quad
+		v_x = \frac{\partial}{\partial x} \left(\frac{\tilde v}{\beta}\right) =
+		\frac{\delta}{\beta}\tilde v_{\tilde x},
+		\quad
+		v_{xx} = \frac{\delta^2}{\beta}\tilde v_{\tilde x \tilde x}.
+	$$
+	Подстановкой в рассматриваемую систему \eqref{eq:basic-task} получим
+	\begin{equation}\label{eq:changed-system}
+		\left\{\begin{aligned}
+			\frac{\gamma}{\alpha} \tilde u_{\tilde t} =&
+			\frac{a}{\alpha K}\tilde u(K - \tilde u) -
+			\frac{b}{\alpha\beta}\cdot\frac{\tilde u \tilde v}{1 + \frac{A}{\alpha}\tilde u} +
+			\frac{d_1 \delta^2}{\alpha} \tilde u_{\tilde x \tilde x}\\
+			\frac{\gamma}{\beta} \tilde v_{\tilde t} =&
+			-\frac{c}{\beta} \tilde v +
+			\frac{d}{\alpha\beta}\cdot\frac{\tilde u \tilde v}{1 + \frac{A}{\alpha}\tilde u} +
+			\frac{d_2 \delta^2}{\beta} \tilde v_{\tilde x \tilde x}.
+		\end{aligned}\right.
+	\end{equation}
+
+	Заметим, что если выбрать коэффициенты замены таким образом:
+	$$
+		\alpha = A,\; \beta = \frac{Ab}{d},\;
+		\gamma = \frac{d}{A}, \delta^2 = \frac{d}{d_1 A},
+	$$
+	то система \eqref{eq:changed-system} примет вид
+	\begin{equation}
+		\left\{\begin{aligned}
+		\tilde u_{\tilde t} =& \frac{aA}{d} \tilde u -
+		\frac{a}{dK} \tilde u^2 -
+		\frac{\tilde u \tilde v}{1 + \tilde u} -
+		\tilde u_{\tilde x \tilde x}
+		\\
+		\tilde v_{\tilde t} =& - \frac{cA}{d}\tilde v +
+		\frac{\tilde u \tilde v}{1 + \tilde u} +
+		\frac{d_2}{d_1} \tilde v_{\tilde x \tilde x}.
+		\end{aligned}\right.
+	\end{equation}
+
+	Таким образом, всюду далее будем исследовать следующую эквивалентную исходной систему с положительными параметрами $A$, $B$, $C$ и $D$:
+	\begin{equation}\label{eq:main-task}
+		\left\{\begin{aligned}
+		\dot u &= -A u^2 + B u - \frac{uv}{1+u} - u_{xx}\\
+		\dot v &= -C v + \frac{uv}{1+u} + Dv_{xx}.
+		\end{aligned}\right.
+	\end{equation}
+
+
+	\section{Исследование сосредоточенной системы}
+	Мы будем понимать под \textit{сосредоточенной} систему, лишённую диффузии.
+	Для нашей задачи \eqref{eq:main-task} это соответственно:
+	\begin{equation}\label{eq:simple-system}
+		\left\{\begin{aligned}
+		\dot u &= -A u^2 + Bu - \frac{uv}{1 + u}\\
+		\dot v &= -C v + \frac{uv}{1 + u}.
+		\end{aligned}\right.
+	\end{equation}
+	Система \eqref{eq:simple-system} не зависит от координаты $x$, поэтому в данном разделе рассматриваем $u(x,t) \equiv u(t)$, $v(x, t) \equiv v(t)$.
+
+	\subsection{Поиск неподвижных точек}
+	Найдем неподвижные точки системы \eqref{eq:simple-system}:
+	$$
+		\left\{\begin{aligned}
+		0 &= -A u^2 + Bu - \frac{uv}{1 + u}\\
+		0 &= -C v + \frac{uv}{1 + u}.
+		\end{aligned}\right.
+		\Longleftrightarrow
+		\left\{\begin{aligned}
+		0 &= u\left(-A u + B - \frac{v}{1 + u}\right)\\
+		0 &= v\left(-C + \frac{u}{1 + u}\right).
+		\end{aligned}\right.
+		\Longleftrightarrow
+	$$
+	$$
+		\Longleftrightarrow
+		\left\{\begin{aligned}
+		&\left[\begin{aligned}
+			0 &= u \\
+			0 &= -Au + B -\frac{v}{1 + u}
+		\end{aligned}\right.
+		\\
+		&\left[\begin{aligned}
+			0 &= v \\
+			0 &= -C + \frac{u}{1 + u}
+		\end{aligned}\right.
+		\end{aligned}\right.
+		\Longleftrightarrow
+		\left[\begin{aligned}
+		&\left\{\begin{aligned}
+			u &= 0 \\
+			v &=0
+		\end{aligned}\right.
+		\\
+		&\left\{\begin{aligned}
+			u &= \frac{B}{A} \\
+			v &= 0
+		\end{aligned}\right.
+		\\
+		&\left\{\begin{aligned}
+			u &= \frac{C}{1 - C} \\
+			v &= \frac{B}{1-C} - \frac{AC}{(1 - C)^2}.
+		\end{aligned}\right.
+		\end{aligned}\right.
+	$$
+	Таким образом, неподвижными для нашей системы являются точки
+	$$
+		P_1 = (0,\,0),
+		\quad
+		P_2 = \left(\frac{B}{A},\,0\right)
+		\quad \mbox{и} \quad 
+		P_3 = \left(\frac{C}{1 - C},\, \frac{B}{1 - C} - \frac{AC}{(1 - C)^2}\right).
+	$$
+	Отметим также, что точка $P_3$ лежит в первой координатной четверти, если выполнено условие
+	\begin{equation}
+		C \leqslant \frac{B}{A + B} < 1,
+	\end{equation}
+        и при равенстве $C = \frac{B}{A+B}$ совпадает с точкой $P_2$.
+
+	\subsection{Типы неподвижных точек}
+	Определим типы неподвижных точек.
+	Для этого приведём якобиан системы \eqref{eq:simple-system}:
+	\begin{equation}
+		J(u, v) =
+		\begin{pmatrix}
+			-2Au+B-\frac{v}{(u+1)^2} & -\frac{u}{1 + u} \\
+			\frac{v}{(u+1)^2}       & -C +\frac{u}{1 + u}
+		\end{pmatrix}.
+	\end{equation}
+
+	Найдём собственные значения матрицы Якоби $J(u,v)$ для точки $P_1 = (0,\,0)$. Выпишем характеристический многочлен:
+	$$
+		\chi_{1}(\lambda)
+		=
+		\mathrm{det} \begin{pmatrix}
+			B - \lambda & 0 \\
+			0           & -C -\lambda
+		\end{pmatrix}
+		=
+		(B - \lambda)(-C - \lambda).
+	$$
+	Приравняв нулю характеристический многочлен $\chi_1(\lambda)$, получили собственные значения:
+	$$
+	       \lambda_1 = B, \quad \lambda_2 = -C.	
+	$$
+	Заметим, что при любом значении параметров собственные числа $\lambda_1$ и $\lambda_2$ вещественные, и $\lambda_1 > 0$, а $\lambda_2 < 0$, то есть точка $P_1$ является седлом.
+
+        \begin{figure}[h]
+                \centering
+                \input{p1}
+        \end{figure}
+%\caption{Эллипсоидальные аппроксимации для 10 направлений.}
+	Найдём собственные значения матрицы Якоби $J(u,v)$ для точки $P_2 = \left(\frac{B}{A},\,0\right)$. Выпишем характеристический многочлен:
+	$$
+                \chi_2=\mathrm{det}\begin{pmatrix}
+                        -B - \lambda & -\frac{B}{A+B} \\
+                        0 & -C + \frac{B}{A+B} - \lambda
+                \end{pmatrix}
+                =
+                (-B - \lambda)\left(
+                        -C + \frac{B}{A+B} - \lambda
+                \right)
+        $$
+        Приравняв нулю характеристический многочлен $\chi_1(\lambda)$, получили собственные значения:
+        $$
+               \lambda_1 = -B, \quad \lambda_2 = -C + \frac{B}{A+B}.     
+        $$
+        Заметим, что при любом значении параметров собственные числа $\lambda_1$ и $\lambda_2$ вещественные; $\lambda_1 < 0$ при любом значении параметров, а $\lambda_2 > 0$ при $C < \frac{B}{A+B}$, $\lambda_2 < 0$ при $C > \frac{B}{A+B}$ и $\lambda_2 = 0$ при $C = \frac{B}{A+B}$.
+
+        Таким образом,
+        \begin{enumerate}
+                \item При $C > \frac{B}{A+B}$ $P_1$ является устойчивым узлом;
+                \item При $C < \frac{B}{A+B}$ $P_1$ является седлом.
+        \end{enumerate}
+
+        Найдём собственные значения матрицы Якоби $J(u,v)$ для точки $P_3=\left(\frac{C}{1 - C},\, \frac{B - BC - AC}{(1 - C)^2}\right)$. Выпишем характеристический многочлен:
+        \begin{multline*}
+                \chi_3 = \mathrm{det}\begin{pmatrix}
+                        \frac{C}{1-C}(-A + B - (A+B) C) - \lambda
+                        &
+                        -C
+                        \\
+                        B - (A+B)C
+                        &
+                        -\lambda
+                \end{pmatrix}
+                =\\=
+                \lambda\left(\frac{C}{1-C}(-A + B - (A+B)C) - \lambda\right) + C(B - (A+B)C) 
+                =\\=
+                \lambda^2 - \frac{C}{1-C}(-A + B - (A + B)C)\lambda + C(B - (A+B)C).
+        \end{multline*}
+        В таком случае:
+        $$
+                \lambda_{1,2} = \frac{\frac{C}{1-C}(-A + B - (A+B)C) \pm \sqrt{\frac{C^2}{(1-C)^2}(-A+B-(A+B)C)^2 - 4(B-(A+B)C)}}{2}
+        $$
+        Введём обозначения: $M = \frac{C}{1-C}(-A + B - (A+B)C)$, $N = 4(B-(A+B)C)$ и заметим, что $N$ на рассматриваемом промежутке $0 < C \leqslant \frac{B}{A+B}$ ограничена $0 \leqslant N < 4B$. Таким образом устойчивость выражения не зависит от подкоренного выражения.
+        $$
+                \lambda_{1,2} = \frac{M \pm \sqrt{M^2 - N}}{2}, \quad \mbox{где } N\geqslant0.
+        $$
+        Получается, что точка устойчива при $\frac{B-A}{A+B} < C < \frac{B}{A+B}$ и неустойчива при $0 < C < \frac{B-A}{A+B}$. При этом для анализа характера точек нужно исследовать знак подкоренного выражения, что сложно. Мы будем смотреть на графики, видно только, что системе характерны и как фокусы так и узлы. 
+\end{document}
